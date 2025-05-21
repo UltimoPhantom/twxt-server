@@ -8,6 +8,6 @@ import {
 
 router.post('/', createText);
 router.get('/', getAllTexts);
-router.patch('/archive/:uuid', archiveText); //test commit
+router.patch('/archive/:uuid', archiveText);
 
 export default router;
