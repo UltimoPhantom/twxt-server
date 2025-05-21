@@ -1,12 +1,12 @@
-const User = require('../models/userModel');
+import { find, create } from '../models/userModel';
 
-exports.getUsers = async (req, res) => {
-  const users = await User.find();
+export async function getUsers(req, res) {
+  const users = await find();
   res.json(users);
-};
+}
 
-exports.createUser = async (req, res) => {
+export async function createUser(req, res) {
   const { name, email, password } = req.body;
-  const newUser = await User.create({ name, email, password });
+  const newUser = await create({ name, email, password });
   res.status(201).json(newUser);
-};
+}
