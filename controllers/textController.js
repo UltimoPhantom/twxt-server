@@ -26,7 +26,7 @@ export const archiveText = async (req, res) => {
     const updated = await Text.findOneAndUpdate(
       { uuid },
       { status: 'archive' },
-      { new: true }
+      { new: true },
     );
     if (!updated) return res.status(404).json({ error: 'Text not found' });
     res.json(updated);
