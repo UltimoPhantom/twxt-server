@@ -1,12 +1,18 @@
 import express, { json } from 'express';
 import { connect } from 'mongoose';
 import { config } from 'dotenv';
+import cors from 'cors';
 import textRoutes from './routes/textRoutes.js';
 
 config();
 
 const app = express();
 const port = process.env.PORT || 5000;
+
+app.use(cors({
+  origin: 'http://localhost:3000', 
+  credentials: true 
+}));
 
 app.use(json());
 
