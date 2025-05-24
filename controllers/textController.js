@@ -13,7 +13,9 @@ export const createText = async (req, res) => {
 
 export const getAllTexts = async (req, res) => {
   try {
-    const texts = await Text.find().sort({ addedAt: -1 });
+    const texts = await Text.find({ status: 'active' }).sort({
+      added_date: -1,
+    });
     res.json(texts);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -30,6 +32,19 @@ export const archiveText = async (req, res) => {
     );
     if (!updated) return res.status(404).json({ error: 'Text not found' });
     res.json(updated);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+export const deleteText = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deletedText = await Text.findByIdAndDelete(id);
+    if (!deletedText) {
+      return res.status(404).json({ error: 'Text not found' });
+    }
+    res.json({ message: 'Text deleted successfully', deletedText });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
