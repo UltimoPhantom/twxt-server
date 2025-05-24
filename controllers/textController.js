@@ -13,7 +13,9 @@ export const createText = async (req, res) => {
 
 export const getAllTexts = async (req, res) => {
   try {
-    const texts = await Text.find().sort({ addedAt: 1 });
+    const texts = await Text.find({ status: 'active' }).sort({
+      added_date: -1,
+    });
     res.json(texts);
   } catch (err) {
     res.status(500).json({ error: err.message });
