@@ -1,24 +1,10 @@
-import express, { json } from 'express';
 import { connect } from 'mongoose';
 import { config } from 'dotenv';
-import cors from 'cors';
-import textRoutes from './routes/textRoutes.js';
+import app from './app.js';
 
 config();
 
-const app = express();
 const port = process.env.PORT || 5000;
-
-app.use(
-  cors({
-    origin: 'http://localhost:3000',
-    credentials: true,
-  }),
-);
-
-app.use(json());
-
-app.use('/api/texts', textRoutes);
 
 connect(process.env.MONGO_URI, {
   useNewUrlParser: true,

@@ -1,8 +1,14 @@
 import { Router } from 'express';
-const router = Router();
-import { getUsers, createUser } from '../controllers/userController';
+import { registerUser, loginUser, getUsers, getUserById } from '../controllers/userController.js';
 
+const router = Router();
+
+// Authentication routes
+router.post('/register', registerUser);
+router.post('/login', loginUser);
+
+// User management routes
 router.get('/', getUsers);
-router.post('/', createUser);
+router.get('/:id', getUserById);
 
 export default router;
