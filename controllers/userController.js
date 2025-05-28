@@ -1,5 +1,5 @@
-import User from '../models/userModel.js';
 import jwt from 'jsonwebtoken';
+import User from '../models/userModel.js';
 
 // Secret key for JWT - should be in environment variables in production
 const JWT_SECRET = 'your_jwt_secret_key'; 
@@ -27,9 +27,9 @@ export const registerUser = async (req, res) => {
     const userObject = user.toObject();
     delete userObject.password;
     
-    res.status(201).json(userObject);
+    return res.status(201).json(userObject);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return res.status(500).json({ error: err.message });
   }
 };
 
@@ -56,22 +56,22 @@ export const loginUser = async (req, res) => {
       { expiresIn: '24h' }
     );
     
-    res.status(200).json({
+    return res.status(200).json({
       token,
       userId: user._id,
       username: user.username
     });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return res.status(500).json({ error: err.message });
   }
 };
 
 export const getUsers = async (req, res) => {
   try {
     const users = await User.find({}, { password: 0 }); // Exclude password
-    res.status(200).json(users);
+    return res.status(200).json(users);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return res.status(500).json({ error: err.message });
   }
 };
 
@@ -84,8 +84,8 @@ export const getUserById = async (req, res) => {
       return res.status(404).json({ error: 'User not found' });
     }
     
-    res.status(200).json(user);
+    return res.status(200).json(user);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return res.status(500).json({ error: err.message });
   }
 };

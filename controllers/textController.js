@@ -2,12 +2,13 @@ import Text from '../models/Text.js';
 
 export const createText = async (req, res) => {
   try {
-    const { text_content } = req.body;
-    const newText = new Text({ text_content });
+    const { text_content: textContent } = req.body;
+    const newText = new Text({ text_content: textContent });
     await newText.save();
     res.status(201).json(newText);
   } catch (err) {
     res.status(500).json({ error: err.message });
+    
   }
 };
 
@@ -16,9 +17,9 @@ export const getAllTexts = async (req, res) => {
     const texts = await Text.find({ status: 'active' }).sort({
       added_date: -1,
     });
-    res.json(texts);
+    return res.json(texts);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return res.status(500).json({ error: err.message });
   }
 };
 
@@ -31,9 +32,9 @@ export const archiveText = async (req, res) => {
       { new: true },
     );
     if (!updated) return res.status(404).json({ error: 'Text not found' });
-    res.json(updated);
+    return res.json(updated);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return res.status(500).json({ error: err.message });
   }
 };
 
@@ -44,8 +45,8 @@ export const deleteText = async (req, res) => {
     if (!deletedText) {
       return res.status(404).json({ error: 'Text not found' });
     }
-    res.json({ message: 'Text deleted successfully', deletedText });
+    return res.json({ message: 'Text deleted successfully', deletedText });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return res.status(500).json({ error: err.message });
   }
 };

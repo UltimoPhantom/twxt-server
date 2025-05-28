@@ -1,11 +1,13 @@
 import { Router } from 'express';
-const router = Router();
+
 import {
   createText,
   getAllTexts,
   archiveText,
   deleteText,
 } from '../controllers/textController.js';
+
+const router = Router();
 
 router.post('/', createText);
 router.get('/', getAllTexts);

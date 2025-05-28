@@ -1,0 +1,7 @@
+# Ignore build files and dependencies
+build/
+dist/
+node_modules/
+coverage/
+
+# We no longer ignore test files as we have specific rules for them in eslint.config.mjs

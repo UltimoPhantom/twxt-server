@@ -1,0 +1,49 @@
+import js from '@eslint/js';
+import globals from 'globals';
+import importPlugin from 'eslint-plugin-import';
+import prettierPlugin from 'eslint-plugin-prettier';
+
+export default [
+  js.configs.recommended,
+  {
+    // Config for all JavaScript files
+    files: ['**/*.js'],
+    languageOptions: {
+      ecmaVersion: 2022,
+      sourceType: 'module',
+      globals: {
+        ...globals.node
+      }
+    },
+    plugins: {
+      import: importPlugin,
+      prettier: prettierPlugin
+    },
+    rules: {
+      'import/extensions': 0,
+      'no-underscore-dangle': 0,
+      'no-console': 'off'
+    }
+  },
+  {
+    // Special config just for test files
+    files: ['**/__tests__/**/*.js', '**/*.test.js', '**/*.spec.js'],
+    languageOptions: {
+      ecmaVersion: 2022,
+      sourceType: 'module',
+      globals: {
+        ...globals.node,
+        ...globals.jest
+      }
+    },
+    plugins: {
+      import: importPlugin,
+      prettier: prettierPlugin
+    },
+    rules: {
+      'no-unused-vars': 'off',
+      'import/no-unresolved': 'off',
+      'import/no-extraneous-dependencies': 'off'
+    }
+  }
+];
