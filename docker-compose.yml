@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  mongo:
+    image: mongo:latest
+    container_name: mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+  backend:
+    image: node:20
+    container_name: nodeapp
+    working_dir: /app
+    volumes:
+      - .:/app
+      - /app/node_modules    # Avoid sharing node_modules with host
+    command: sh -c "npm install && node index.js"
+    ports:
+      - "5000:5000"
+    environment:
+      - MONGO_URL=mongodb://mongo:27017/mydb
+    depends_on:
+      - mongo
+
+volumes:
+  mongo-data:
