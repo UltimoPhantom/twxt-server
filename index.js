@@ -1,6 +1,6 @@
 import { connect } from 'mongoose';
-import app from './app.js';
 import { SSMClient, GetParameterCommand } from '@aws-sdk/client-ssm';
+import app from './app.js';
 
 const port = process.env.PORT || 5000;
 
@@ -15,12 +15,10 @@ async function getMongoUri() {
 }
 
 getMongoUri()
-  .then((mongoUri) => {
-    return connect(mongoUri, {
+  .then((mongoUri) => connect(mongoUri, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
-    });
-  })
+    }))
   .then(() => {
     app.listen(port, () => console.log(`Server running on port ${port}`));
   })
