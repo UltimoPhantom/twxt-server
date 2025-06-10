@@ -1,16 +1,27 @@
 import { connect } from 'mongoose';
-import { config } from 'dotenv';
 import app from './app.js';
-
-config();
+import { SSMClient, GetParameterCommand } from '@aws-sdk/client-ssm';
 
 const port = process.env.PORT || 5000;
 
-connect(process.env.MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
+async function getMongoUri() {
+  const client = new SSMClient({ region: 'us-east-1' });
+  const command = new GetParameterCommand({
+    Name: 'twxt-MONGO_URI',
+    WithDecryption: true,
+  });
+  const response = await client.send(command);
+  return response.Parameter.Value;
+}
+
+getMongoUri()
+  .then((mongoUri) => {
+    return connect(mongoUri, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+  })
   .then(() => {
     app.listen(port, () => console.log(`Server running on port ${port}`));
   })
-  .catch((err) => console.error(err));
+  .catch((err) => console.error('Failed to start server:', err));
