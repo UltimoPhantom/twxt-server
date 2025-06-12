@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import { connect } from 'mongoose';
 import { SSMClient, GetParameterCommand } from '@aws-sdk/client-ssm';
 import app from './app.js';

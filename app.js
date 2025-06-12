@@ -6,11 +6,10 @@ import userRoutes from './routes/userRoutes.js';
 // Create Express app
 export function createApp() {
   const app = express();
-
   app.use(
     cors({
-      origin: 'http://localhost:3000',
-    credentials: true
+      origin: process.env.CLIENT_URL || 'http://localhost:3000',
+      credentials: true
     }),
   );
   app.use(json());
@@ -20,5 +19,6 @@ export function createApp() {
   return app;
 }
 
+// Default export for backward compatibility
 const app = createApp();
 export default app;
