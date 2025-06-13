@@ -1,22 +1,22 @@
-# Use official Node.js image
+# Use Node 20 base image
 FROM node:20-alpine
 
 # Set working directory
 WORKDIR /app
 
-# Copy dependencies
+# Copy and install deps
 COPY package*.json ./
 RUN npm install --production
 
-# Copy app source
+# Copy rest of the code
 COPY . .
 
-# Set environment variable from build arg
+# Inject CLIENT_URL during build time
 ARG CLIENT_URL
 ENV CLIENT_URL=$CLIENT_URL
 
-# Expose the app port
+# Expose port
 EXPOSE 5000
 
-# Run the server
-CMD ["node", "index.js"]
+# Run the app
+CMD [ "node", "index.js" ]
