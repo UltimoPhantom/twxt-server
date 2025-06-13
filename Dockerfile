@@ -1,20 +1,22 @@
-# Use an official Node.js runtime as a base image
+# Use official Node.js image
 FROM node:20-alpine
 
-# Set the working directory
+# Set working directory
 WORKDIR /app
 
-# Copy package.json and lock file first (for layer caching)
+# Copy dependencies
 COPY package*.json ./
-
-# Install dependencies
 RUN npm install --production
 
-# Copy the rest of the code
+# Copy app source
 COPY . .
 
-# Your app runs on port 3000 (adjust if needed)
+# Set environment variable from build arg
+ARG CLIENT_URL
+ENV CLIENT_URL=$CLIENT_URL
+
+# Expose the app port
 EXPOSE 5000
 
-# Define the command to run your app
-CMD [ "node", "index.js" ]
+# Run the server
+CMD ["node", "index.js"]

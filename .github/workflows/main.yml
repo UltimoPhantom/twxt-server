@@ -2,11 +2,9 @@ name: Checks
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
   pull_request:
-    branches:
-      - main
+    branches: [ main ]
 
 jobs:
   tests-and-lint:
@@ -43,13 +41,19 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
+      - name: Get CLIENT_URL from SSM
+        id: get-client-url
+        run: |
+          CLIENT_URL=$(aws ssm get-parameter --name "/twxt/frontend_url" --with-decryption --query "Parameter.Value" --output text)
+          echo "CLIENT_URL=$CLIENT_URL" >> $GITHUB_ENV
+
       - name: Login to AWS ECR
         run: |
           aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 454781577946.dkr.ecr.us-east-1.amazonaws.com
 
       - name: Build & Tag Docker image
         run: |
-          docker build -t backend .
+          docker build --build-arg CLIENT_URL=$CLIENT_URL -t backend .
           docker tag backend:latest 454781577946.dkr.ecr.us-east-1.amazonaws.com/twxt/backend:latest
 
       - name: Push Docker image
