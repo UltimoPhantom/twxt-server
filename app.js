@@ -6,18 +6,14 @@ import userRoutes from './routes/userRoutes.js';
 export function createApp() {
   const app = express();
 
-  app.options('*', cors());
-
-  app.use(cors({
-    origin: function(origin, callback) {
-      if(!origin) return callback(null, true);
-      
-      return callback(null, true);
-    },
+  const corsOptions = {
+    origin: '*',
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
     allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization']
-  }));
+  };
+
+  app.use(cors(corsOptions));
 
   app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
