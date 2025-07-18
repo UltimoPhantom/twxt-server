@@ -1,26 +1,38 @@
 import 'dotenv/config';
 import { connect } from 'mongoose';
 import { SSMClient, GetParameterCommand } from '@aws-sdk/client-ssm';
-import app from './app.js';
+import app from '../app.js';  // your Express app
 
-const port = process.env.PORT || 5000;
+let conn = null;
 
 async function getMongoUri() {
   const client = new SSMClient({ region: 'us-east-1' });
-  const command = new GetParameterCommand({
+  const cmd = new GetParameterCommand({
     Name: 'twxt-MONGO_URI',
     WithDecryption: true,
   });
-  const response = await client.send(command);
-  return response.Parameter.Value;
+  const res = await client.send(cmd);
+  return res.Parameter.Value;
 }
 
-getMongoUri()
-  .then((mongoUri) => connect(mongoUri, {
+async function ensureDb() {
+  if (!conn) {
+    const uri = await getMongoUri();
+    conn = await connect(uri, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
-    }))
-  .then(() => {
-    app.listen(port, () => console.log(`Server running on port ${port}`));
-  })
-  .catch((err) => console.error('Failed to start server:', err));
+    });
+    console.log('✅ MongoDB connected');
+  }
+}
+
+export default async function handler(req, res) {
+  try {
+    await ensureDb();
+    return app(req, res);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server error', message: err.message });
+  }
+}
+
