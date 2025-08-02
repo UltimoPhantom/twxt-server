@@ -15,6 +15,7 @@ export function createApp() {
 
   app.use(cors(corsOptions));
 
+  // CORS Headers
   app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH');
@@ -22,17 +23,21 @@ export function createApp() {
     next();
   });
 
+  // Simple CORS Test
   app.get('/cors-test', (req, res) => {
-    res.json({ 
+    res.json({
       message: 'CORS is working!',
       origin: req.headers.origin || 'No origin provided'
     });
   });
 
+  // JSON Body Parser
   app.use(json());
+  
+  // Define Routes
   app.use('/api/texts', textRoutes);
   app.use('/api/users', userRoutes);
-  
+
   return app;
 }
 
